@@ -2,8 +2,8 @@
 try:
     import weechat 
 except:
-    pass
 
+import os
 SCRIPT_NAME = "weesms"
 SCRIPT_AUTHOR = "Aerex"
 SCRIPT_VERSION = "1.0.0"
@@ -32,6 +32,20 @@ class send(Command):
     def exc(**kwargs):
         pass
 
+    def add(*args):
+        if len(args) < 1:
+            print "Missing nickname"
+            return wc.WEECHAT_RC_ERROR
+        if len(args) < 2:
+            print "Missing phone"
+            return wc.WEECHAT_RC_ERROR
+
+        nick = argv[0]
+        phone = argv[1]
+        contact_id = uuid.uuid4()
+        contact = Contact(nick=nick, phone=phone, id=contact_id)
+        contact.save()
+
 class Wrapper(object):
     def __init__(self, wc):
         self.wc = wc
@@ -52,6 +66,32 @@ class Contact(object):
     def setInfo(self, **kwargs):
         for key, value in kwargs.items():
             setattr(self, key, value)
+
+    def save(self):
+        if not self.id:
+            print "Contact does not have an id"
+            return wc.WEECHAT_RC_ERROR
+    
+        list_of_contacts = []
+        try:
+            if(os.path.exists(CONTACT_DIR):
+                with open(CONTACT_DIR, 'r') as fd:
+                    list_of_contacts = json.load(fd)
+                    if self.exists(list_of_contacts);
+                        print "The contact {} already exists".format(self.__repr__)
+                        fd.close()
+                        return wc.WEECHAT_RC_ERROR
+
+            else:
+                with open(CONTACT_DIR, 'w') as fd:
+                list_of_contacts.append({"nick": self.nick, "id": self.id, "phone": self.password})
+                fd.write("{}".format(json.dumps(list_of_contacts))
+                fd.close()
+        except Exception e:
+            print "There was a problem saving contact due to {}".format(e)
+            return wc.WEECHAT_RC_ERROR
+
+        return WEECHAT_RC_OK
 
 def init():
     w.hook_command(
