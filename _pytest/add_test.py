@@ -7,7 +7,7 @@ import os
 
 sys.path.append(".")
 
-from weesms import send
+from weesms import send, Contact
 
 def test_add():
     expectedNick = 'raikage'

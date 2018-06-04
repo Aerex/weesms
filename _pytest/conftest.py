@@ -5,10 +5,11 @@ sys.path.append(".")
 import weesms
 
 class fake_weechat():
-    WEECHAT_RC_OK = 0
+    WEECHAT_RC_ERROR = 0
+    WEECHAT_RC_OK = 1
+    WEECHAT_RC_OK_EAT = 2
     def __init__(self):
-        self.WEECHAT_RC_OK = 0
-        self.WEECHAT_RC_ERROR = -1
+        pass
     def prnt(message):
         print message
 
